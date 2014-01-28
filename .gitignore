@@ -1,3 +1,7 @@
-
+build/
 src/gcoin
 src/gcoind
+
+Makefile
+
+qrc_bitcoin.cpp
