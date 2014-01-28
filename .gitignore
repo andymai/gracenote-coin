@@ -5,3 +5,7 @@ src/gcoind
 Makefile
 
 qrc_bitcoin.cpp
+
+gCoin-qt.app/
+
+gCoin-qt.app/Contents/MacOS/gCoin-qt
