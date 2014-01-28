@@ -1429,7 +1429,7 @@ public:
 
     // Actions
     std::string strComment;
-    std::string strStatusGNC;
+    std::string strStatusBar;
     std::string strReserved;
 
     IMPLEMENT_SERIALIZE
@@ -1447,7 +1447,7 @@ public:
         READWRITE(nPriority);
 
         READWRITE(strComment);
-        READWRITE(strStatusGNC);
+        READWRITE(strStatusBar);
         READWRITE(strReserved);
     )
 
@@ -1465,7 +1465,7 @@ public:
         nPriority = 0;
 
         strComment.clear();
-        strStatusGNC.clear();
+        strStatusBar.clear();
         strReserved.clear();
     }
 
@@ -1490,7 +1490,7 @@ public:
                 "    setSubVer    = %s\n"
                 "    nPriority    = %d\n"
                 "    strComment   = \"%s\"\n"
-                "    strStatusGNC = \"%s\"\n"
+                "    strStatusBar = \"%s\"\n"
                 ")\n",
             nVersion,
             nRelayUntil,
@@ -1503,7 +1503,7 @@ public:
             strSetSubVer.c_str(),
             nPriority,
             strComment.c_str(),
-            strStatusGNC.c_str());
+            strStatusBar.c_str());
     }
 
     void print() const
