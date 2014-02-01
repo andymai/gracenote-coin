@@ -34,7 +34,7 @@ LIBS += \
    -l crypto
 
 ifndef USE_UPNP
-	override USE_UPNP = -
+	override USE_UPNP = 1
 endif
 ifneq (${USE_UPNP}, -)
 	LIBS += -l miniupnpc

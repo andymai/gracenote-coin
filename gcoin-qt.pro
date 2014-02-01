@@ -1,9 +1,12 @@
 TEMPLATE = app
-TARGET =
+TARGET = gcoin-qt
+macx:TARGET = "gCoin-Qt"
 VERSION = 0.6.3
 INCLUDEPATH += src src/json src/qt
-DEFINES += QT_GUI BOOST_THREAD_USE_LIB BOOST_SPIRIT_THREADSAFE BOOST_THREAD_PROVIDES_GENERIC_SHARED_MUTEX_ON_WIN __NO_SYSTEM_INCLUDES
+QT += network
+DEFINES += QT_GUI BOOST_THREAD_USE_LIB BOOST_SPIRIT_THREADSAFE
 CONFIG += no_include_pwd
+CONFIG += thread
 
 # UNCOMMENT THIS SECTION TO BUILD ON WINDOWS
 
@@ -27,19 +30,31 @@ UI_DIR = build
 # use: qmake "RELEASE=1"
 contains(RELEASE, 1) {
     # Mac: compile for maximum compatibility (10.5, 32-bit)
-    macx:QMAKE_CXXFLAGS += -mmacosx-version-min=10.5 -arch i386 -isysroot /Developer/SDKs/MacOSX10.5.sdk
-    macx:QMAKE_CFLAGS += -mmacosx-version-min=10.5 -arch i386 -isysroot /Developer/SDKs/MacOSX10.5.sdk
-    macx:QMAKE_LFLAGS += -mmacosx-version-min=10.5 -arch i386 -isysroot /Developer/SDKs/MacOSX10.5.sdk
+    macx:QMAKE_CXXFLAGS += -mmacosx-version-min=10.7 -arch x86_64
+	macx:QMAKE_CFLAGS += -mmacosx-version-min=10.7 -arch x86_64
+	macx:QMAKE_OBJECTIVE_CFLAGS += -mmacosx-version-min=10.7 -arch x86_64
 
-    !windows:!macx {
-        # Linux: static link
-        LIBS += -Wl,-Bstatic
-    }
+    !win32:!macx {
+		# Linux: static link and extra security (see: https://wiki.debian.org/Hardening)
+		LIBS += -Wl,-Bstatic -Wl,-z,relro -Wl,-z,now
+	}
 }
 
-# qmake "USE_UPNP=-" (not supported)
+# use: qmake "USE_UPNP=1" ( enabled by default; default)
+#  or: qmake "USE_UPNP=0" (disabled by default)
+#  or: qmake "USE_UPNP=-" (not supported)
+# miniupnpc (http://miniupnp.free.fr/files/) must be installed for support
 contains(USE_UPNP, -) {
     message(Building without UPNP support)
+} else {
+    message(Building with UPNP support)
+    count(USE_UPNP, 0) {
+        USE_UPNP=1
+    }
+    DEFINES += USE_UPNP=$$USE_UPNP STATICLIB
+    INCLUDEPATH += $$MINIUPNPC_INCLUDE_PATH
+    LIBS += $$join(MINIUPNPC_LIB_PATH,,-L,) -lminiupnpc
+    win32:LIBS += -liphlpapi
 }
 
 # use: qmake "USE_QRCODE=1"
